@@ -9,9 +9,10 @@ namespace Test_Environment
         static void Main(string[] args)
         {
             Manager manager = new Manager(0);
+
+            MainMenu(manager);
             Gather(manager);
             Construct(manager);
-            MainMenu(manager);
         }
 
         static void MainMenu(Manager manager)
@@ -148,21 +149,30 @@ namespace Test_Environment
         static void gatherWood(Manager manager) 
         {
             manager.resource.wood += 1;
+            Thread.Sleep(500);
             Console.WriteLine($"You have gathered 1 wood, you now have {manager.resource.wood} \n");
         }
 
         static void gatherStone(Manager manager)
         {
             manager.resource.stone += 1;
+            Thread.Sleep(500);
             Console.WriteLine($"You have gathered 1 stone, you now have {manager.resource.stone} \n");
         }
 
         static void Fireplace(Manager manager)
         {
-            manager.buildings.Fireplace += 1;
-            manager.resource.wood -= 7;
-            manager.resource.stone -= 3;
-            Console.WriteLine($"You now have a fireplace but you lost 7 wood and 3 stone. \n");
+            if (manager.resource.wood >= 7 && manager.resource.stone >= 3)
+            {
+                manager.buildings.Fireplace += 1;
+                manager.resource.wood -= 7;
+                manager.resource.stone -= 3;
+                Console.WriteLine($"You now have a fireplace but you lost 7 wood and 3 stone. \n");
+            }
+            else
+            {
+                Console.WriteLine($"You don't have enough resources \n");
+            }
         }
     }
 }
