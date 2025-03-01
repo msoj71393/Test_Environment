@@ -8,57 +8,119 @@ namespace Test_Environment
     {
         static void Main(string[] args)
         {
-            bool showMenu = true;
-            while (showMenu)
-            {
-                showMenu = Game();
-            }
+            Manager manager = new Manager(0);
+            Gather(manager);
+            Construct(manager);
+            MainMenu(manager);
+        }
 
-            Game();
+        static void MainMenu(Manager manager)
+        {
+            int choice = 0;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("----------");
+                Console.WriteLine("1) Gather");
+                Console.WriteLine("2) Construct");
+                Console.WriteLine("3) Exit");
+
+                if (int.TryParse(Console.ReadLine(), out choice))
+                {
+                    switch (choice)
+                    {
+                        case 1:
+                            Gather(manager);
+                            break;
+                        case 2:
+                            Construct(manager);
+                            break;
+                        case 3:
+                            Console.WriteLine("Exiting...");
+                            break;
+                        default:
+                            Console.WriteLine("Invalid choice, try again.");
+                            break;
+                    }
+                }
+            } while (choice != 3);
+        }
+
+        static void Gather(Manager manager)
+        {
+            int choice = 0;
+            do
+            {
+                Console.WriteLine("Choose an option:");
+                Console.WriteLine("1) Gather wood");
+                Console.WriteLine("2) Gather stone");
+                Console.WriteLine("3) Exit");
+
+                if (int.TryParse(Console.ReadLine(), out choice))
+                {
+                    switch (choice)
+                    {
+                        case 1:
+                            gatherWood(manager);
+                            break;
+                        case 2:
+                            gatherStone(manager);
+                            break;
+                        default:
+                            Console.WriteLine("Invalid option. Try again.");
+                            break;
+                    }
+                }
+
+                manager.Turn++;
+                Console.WriteLine($"The end of turn {manager.Turn} \n");
+
+            } while (choice != 3 && manager.Turn <= 100);
+        }
+
+        static void Construct(Manager manager)
+        {
+
+            int choice = 0;
+            do
+            {
+                Console.WriteLine("Choose an option:");
+                Console.WriteLine("1) Construct a fireplace");
+                Console.WriteLine("3) Exit");
+
+
+                if (int.TryParse(Console.ReadLine(), out choice))
+                {
+                    switch (choice)
+                    {
+                        case 1:
+                            Fireplace(manager);
+                            break;
+                        //case 2:
+                        //    asdf(manager);
+                        //    break;
+                        default:
+                            Console.WriteLine("Invalid option. Try again.");
+                            break;
+                    }
+                }
+
+                manager.Turn++;
+                Console.WriteLine($"The end of turn {manager.Turn} \n");
+
+            } while (choice != 3 && manager.Turn <= 100);
         }
 
         public class Manager
         {
             public int Turn = 0;
             public Resource resource = new Resource();
+            public Buildings buildings = new Buildings();
 
             public Manager(int turn)
             {
                 Turn = turn;
             }
-        }
-
-        static bool Game()
-        {
-            Manager manager = new Manager(0);
-
-            Console.WriteLine("Choose an option:");
-            Console.WriteLine("1) Gather wood");
-            Console.WriteLine("2) Gather stone");
-
-            do
-            {
-                Console.WriteLine("It's your turn");
-
-                switch (Console.ReadLine())
-                {
-                    case "1":
-                        gatherWood(manager);
-                        break;
-                    case "2":
-                        gatherStone(manager);
-                        break;
-                    default:
-                        Console.WriteLine("Invalid option. Try again.");
-                        break;
-                }
-
-                manager.Turn++;
-                Console.WriteLine($"The end of turn + {manager.Turn} \n");
-
-            } while (manager.Turn <= 100);
-
-            return true;
         }
 
         public class Resource
@@ -77,6 +139,12 @@ namespace Test_Environment
             }
         }
 
+        public class Buildings
+        {
+            public string? Fireplace;
+        }
+
+
         static void gatherWood(Manager manager) 
         {
             manager.resource.wood += 1;
@@ -87,6 +155,14 @@ namespace Test_Environment
         {
             manager.resource.stone += 1;
             Console.WriteLine($"You have gathered 1 stone, you now have {manager.resource.stone} \n");
+        }
+
+        static void Fireplace(Manager manager)
+        {
+            manager.buildings.Fireplace += 1;
+            manager.resource.wood -= 7;
+            manager.resource.stone -= 3;
+            Console.WriteLine($"You now have a fireplace but you lost 7 wood and 3 stone. \n");
         }
     }
 }
