@@ -1,0 +1,14 @@
+G:\Datamatiker\Visual Studio Code\Test Environment\Test Environment\bin\Debug\net8.0\Test Environment.exe
+G:\Datamatiker\Visual Studio Code\Test Environment\Test Environment\bin\Debug\net8.0\Test Environment.deps.json
+G:\Datamatiker\Visual Studio Code\Test Environment\Test Environment\bin\Debug\net8.0\Test Environment.runtimeconfig.json
+G:\Datamatiker\Visual Studio Code\Test Environment\Test Environment\bin\Debug\net8.0\Test Environment.dll
+G:\Datamatiker\Visual Studio Code\Test Environment\Test Environment\bin\Debug\net8.0\Test Environment.pdb
+G:\Datamatiker\Visual Studio Code\Test Environment\Test Environment\obj\Debug\net8.0\Test Environment.GeneratedMSBuildEditorConfig.editorconfig
+G:\Datamatiker\Visual Studio Code\Test Environment\Test Environment\obj\Debug\net8.0\Test Environment.AssemblyInfoInputs.cache
+G:\Datamatiker\Visual Studio Code\Test Environment\Test Environment\obj\Debug\net8.0\Test Environment.AssemblyInfo.cs
+G:\Datamatiker\Visual Studio Code\Test Environment\Test Environment\obj\Debug\net8.0\Test Environment.csproj.CoreCompileInputs.cache
+G:\Datamatiker\Visual Studio Code\Test Environment\Test Environment\obj\Debug\net8.0\Test Environment.dll
+G:\Datamatiker\Visual Studio Code\Test Environment\Test Environment\obj\Debug\net8.0\refint\Test Environment.dll
+G:\Datamatiker\Visual Studio Code\Test Environment\Test Environment\obj\Debug\net8.0\Test Environment.pdb
+G:\Datamatiker\Visual Studio Code\Test Environment\Test Environment\obj\Debug\net8.0\Test Environment.genruntimeconfig.cache
+G:\Datamatiker\Visual Studio Code\Test Environment\Test Environment\obj\Debug\net8.0\ref\Test Environment.dll
