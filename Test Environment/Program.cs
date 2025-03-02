@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.ComponentModel.Design;
+using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using static Test_Environment.Program;
 
@@ -9,34 +11,47 @@ namespace Test_Environment
         static void Main(string[] args)
         {
             Manager manager = new Manager(0);
+            Player player = new Player();
+            Tower tower = new Tower();
+            Kobold kobold = new Kobold();
+            LootTable lootTable = new LootTable();
 
-            MainMenu(manager);
-            Gather(manager);
-            Construct(manager);
+            MainMenu(manager, player, kobold, tower, lootTable);
+            Gather(manager, player, kobold, tower, lootTable);
+            Construct(manager, player, kobold, tower, lootTable);
+
+            
         }
 
-        static void MainMenu(Manager manager)
+        static void MainMenu(Manager manager, Player player, Kobold kobold, Tower tower, LootTable lootTable)
         {
             int choice = 0;
             do
             {
-                Console.Clear();
                 Console.WriteLine("----------");
                 Console.WriteLine("1) Gather");
                 Console.WriteLine("2) Construct");
-                Console.WriteLine("3) Exit");
+                Console.WriteLine("3) Inventory");
+                Console.WriteLine("4) Tower");
+                Console.WriteLine("5) Exit");
 
                 if (int.TryParse(Console.ReadLine(), out choice))
                 {
                     switch (choice)
                     {
                         case 1:
-                            Gather(manager);
+                            Gather(manager, player, kobold, tower, lootTable);
                             break;
                         case 2:
-                            Construct(manager);
+                            Construct(manager, player, kobold, tower, lootTable);
                             break;
                         case 3:
+                            Inventory(manager);
+                            break;
+                        case 4:
+                            Tower(player, kobold, tower, manager, lootTable);
+                            break;
+                        case 5:
                             Console.WriteLine("Exiting...");
                             break;
                         default:
@@ -44,10 +59,10 @@ namespace Test_Environment
                             break;
                     }
                 }
-            } while (choice != 3);
+            } while (choice != 6);
         }
 
-        static void Gather(Manager manager)
+        static void Gather(Manager manager, Player player, Kobold kobold, Tower tower, LootTable lootTable)
         {
             int choice = 0;
             do
@@ -67,6 +82,9 @@ namespace Test_Environment
                         case 2:
                             gatherStone(manager);
                             break;
+                        case 3:
+                            MainMenu(manager, player, kobold, tower, lootTable);
+                            break;
                         default:
                             Console.WriteLine("Invalid option. Try again.");
                             break;
@@ -76,18 +94,18 @@ namespace Test_Environment
                 manager.Turn++;
                 Console.WriteLine($"The end of turn {manager.Turn} \n");
 
-            } while (choice != 3 && manager.Turn <= 100);
+            } while (choice != 4 && manager.Turn <= 100);
         }
 
-        static void Construct(Manager manager)
+        static void Construct(Manager manager, Player player, Kobold kobold, Tower tower, LootTable lootTable)
         {
 
             int choice = 0;
             do
             {
                 Console.WriteLine("Choose an option:");
-                Console.WriteLine("1) Construct a fireplace");
-                Console.WriteLine("3) Exit");
+                Console.WriteLine("1) Construct a spear, cost 7 wood & 3 stone");
+                Console.WriteLine("3) Back");
 
 
                 if (int.TryParse(Console.ReadLine(), out choice))
@@ -95,11 +113,14 @@ namespace Test_Environment
                     switch (choice)
                     {
                         case 1:
-                            Fireplace(manager);
+                            Spear(manager);
                             break;
                         //case 2:
                         //    asdf(manager);
                         //    break;
+                        case 3:
+                            MainMenu(manager, player, kobold, tower, lootTable);
+                            break;
                         default:
                             Console.WriteLine("Invalid option. Try again.");
                             break;
@@ -109,14 +130,51 @@ namespace Test_Environment
                 manager.Turn++;
                 Console.WriteLine($"The end of turn {manager.Turn} \n");
 
-            } while (choice != 3 && manager.Turn <= 100);
+            } while (choice != 4 && manager.Turn <= 100);
+        }
+
+        static void Tower(Player player, Test_Environment.Kobold kobold, Test_Environment.Tower tower, Manager manager, LootTable lootTable)
+        {
+
+            int choice = 0;
+            do
+            {
+                Console.WriteLine("Choose an option:");
+                Console.WriteLine("1) Floor 1");
+                Console.WriteLine("1) Floor 2");
+                Console.WriteLine("3) Back");
+
+
+                if (int.TryParse(Console.ReadLine(), out choice))
+                {
+                    switch (choice)
+                    {
+                        case 1:
+                            Combat(player, kobold, tower, lootTable);
+                            break;
+                        //case 2:
+                        //    asdf(manager);
+                        //    break;
+                        case 3:
+                            MainMenu(manager, player, kobold, tower, lootTable);
+                            break;
+                        default:
+                            Console.WriteLine("Invalid option. Try again.");
+                            break;
+                    }
+                }
+
+                manager.Turn++;
+                Console.WriteLine($"The end of turn {manager.Turn} \n");
+
+            } while (choice != 4 && manager.Turn <= 100);
         }
 
         public class Manager
         {
             public int Turn = 0;
             public Resource resource = new Resource();
-            public Buildings buildings = new Buildings();
+            public Building building = new Building();
 
             public Manager(int turn)
             {
@@ -140,38 +198,135 @@ namespace Test_Environment
             }
         }
 
-        public class Buildings
+        public class Building
         {
-            public string? Fireplace;
+            public bool Spear = false;
+        }
+
+        public static void Inventory(Manager manager)
+        {
+
+            Console.WriteLine($"You have {manager.resource.wood} wood and {manager.resource.stone} stone");
+            Console.WriteLine($"---------------------");
+            if (manager.building.Spear == true)
+            {
+                Console.WriteLine($"You have a spear \n");
+            }
         }
 
 
-        static void gatherWood(Manager manager) 
+        static void gatherWood(Manager manager)
         {
             manager.resource.wood += 1;
-            Thread.Sleep(500);
+            //Thread.Sleep(500);
             Console.WriteLine($"You have gathered 1 wood, you now have {manager.resource.wood} \n");
         }
 
         static void gatherStone(Manager manager)
         {
             manager.resource.stone += 1;
-            Thread.Sleep(500);
+            //Thread.Sleep(500);
             Console.WriteLine($"You have gathered 1 stone, you now have {manager.resource.stone} \n");
         }
 
-        static void Fireplace(Manager manager)
+        static void Spear(Manager manager)
         {
             if (manager.resource.wood >= 7 && manager.resource.stone >= 3)
             {
-                manager.buildings.Fireplace += 1;
+                manager.building.Spear = true;
                 manager.resource.wood -= 7;
                 manager.resource.stone -= 3;
-                Console.WriteLine($"You now have a fireplace but you lost 7 wood and 3 stone. \n");
+                Console.WriteLine($"You now have a spear but you lost 7 wood and 3 stone. \n");
             }
             else
             {
                 Console.WriteLine($"You don't have enough resources \n");
+            }
+        }
+
+        static void Combat(Player player, Kobold kobold, Tower tower, LootTable lootTable)
+        {
+
+            int choice = 0;
+            do
+            {
+                Console.WriteLine("Choose an option:");
+                Console.WriteLine("1) Attack kobold");
+                //Console.WriteLine("1) 2");
+                Console.WriteLine("3) Back");
+
+                if (int.TryParse(Console.ReadLine(), out choice))
+                {
+                    switch (choice)
+                    {
+                        case 1:
+                            if (player.Health > 0 && kobold.Health > 0)
+                            {
+                                kobold.Health -= player.Damage;
+                                Console.WriteLine($"You deal {player.Damage} to the kobold, kobold's health is now {kobold.Health} ");
+                                player.Health -= kobold.Damage;
+                                Console.WriteLine($"The kobold deals {kobold.Damage} to you, your health is now {player.Health} \n");
+                                if (kobold.Health == 0) 
+                                {
+                                    LootTable.InitializeLootTable();
+                                    string loot = LootTable.GetRandomLoot();
+                                    Console.WriteLine($"Chosen Loot: {loot}");
+                                }
+                                break;
+                            }
+                            else if (player.Health == 0)
+                            {
+                                Console.WriteLine($"You have died");
+                                break;
+                            }
+                            else if (kobold.Health == 0)
+                            {
+                                Console.WriteLine($"The kobold already dead");
+                                break;
+                            }
+                            break;
+                        default:
+                            Console.WriteLine("Invalid option. Try again.");
+                            break;
+                    }
+                }
+            } while (choice != 3 && kobold.Health > 0 && choice != 3 && player.Health > 0);
+        }
+
+        public class LootTable
+        {
+
+            private static Dictionary<string, List<string>> lootTable = new Dictionary<string, List<string>>();
+
+            public static void InitializeLootTable()
+            {
+                lootTable["Weapons"] = new List<string> { "Sword", "Axe", "Bow", "Dagger" };
+                lootTable["Armor"] = new List<string> { "Helmet", "Chestplate", "Boots", "Gloves" };
+                lootTable["Potions"] = new List<string> { "Health Potion", "Mana Potion", "Stamina Potion" };
+                lootTable["Misc"] = new List<string> { "Gold", "Map", "Key" };
+            }
+
+            public static string GetRandomLoot()
+            {
+                Random rand = new Random();
+
+                var categories = new List<string>(lootTable.Keys);
+                if (categories.Count == 0)
+                {
+                    return "No loot available!";
+                }
+
+                string randomCategory = categories[rand.Next(0, categories.Count)];
+
+                if (lootTable[randomCategory].Count == 0)
+                {
+                    return $"No items in category: {randomCategory}";
+                }
+
+                var items = lootTable[randomCategory];
+                string randomItem = items[rand.Next(0, items.Count)];
+
+                return $"{randomCategory}: {randomItem}";
             }
         }
     }
