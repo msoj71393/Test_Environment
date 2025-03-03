@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using static Test_Environment.Program;
 
 namespace Test_Environment
@@ -17,14 +18,18 @@ namespace Test_Environment
             LootTable lootTable = new LootTable();
             Dragon dragon = new Dragon();
 
-            MainMenu(manager, player, kobold, tower, lootTable, dragon);
-            Gather(manager, player, kobold, tower, lootTable, dragon);
-            Construct(manager, player, kobold, tower, lootTable, dragon);
+            SkillSystem skillSystem = new SkillSystem();
+
+            LevelSystem levelSystem = new LevelSystem();
+
+            MainMenu(levelSystem, manager, player, kobold, tower, lootTable, dragon);
+            Gather(levelSystem, manager, player, kobold, tower, lootTable, dragon);
+            Construct(levelSystem, manager, player, kobold, tower, lootTable, dragon);
 
             
         }
 
-        static void MainMenu(Manager manager, Player player, Kobold kobold, Tower tower, LootTable lootTable, Dragon dragon)
+        static void MainMenu(LevelSystem levelSystem, Manager manager, Player player, Kobold kobold, Tower tower, LootTable lootTable, Dragon dragon)
         {
             int choice = 0;
             do
@@ -41,16 +46,16 @@ namespace Test_Environment
                     switch (choice)
                     {
                         case 1:
-                            Gather(manager, player, kobold, tower, lootTable, dragon);
+                            Gather(levelSystem, manager, player, kobold, tower, lootTable, dragon);
                             break;
                         case 2:
-                            Construct(manager, player, kobold, tower, lootTable, dragon);
+                            Construct(levelSystem ,manager, player, kobold, tower, lootTable, dragon);
                             break;
                         case 3:
                             Inventory(manager);
                             break;
                         case 4:
-                            Tower(player, kobold, tower, manager, lootTable, dragon);
+                            Tower(levelSystem, player, kobold, tower, manager, lootTable, dragon);
                             break;
                         case 5:
                             Console.WriteLine("Exiting...");
@@ -63,7 +68,7 @@ namespace Test_Environment
             } while (choice != 6);
         }
 
-        static void Gather(Manager manager, Player player, Kobold kobold, Tower tower, LootTable lootTable, Dragon dragon)
+        static void Gather(LevelSystem levelSystem, Manager manager, Player player, Kobold kobold, Tower tower, LootTable lootTable, Dragon dragon)
         {
             int choice = 0;
             do
@@ -84,7 +89,7 @@ namespace Test_Environment
                             gatherStone(manager);
                             break;
                         case 3:
-                            MainMenu(manager, player, kobold, tower, lootTable, dragon);
+                            MainMenu(levelSystem, manager, player, kobold, tower, lootTable, dragon);
                             break;
                         default:
                             Console.WriteLine("Invalid option. Try again.");
@@ -98,7 +103,7 @@ namespace Test_Environment
             } while (choice != 4 && manager.Turn <= 100);
         }
 
-        static void Construct(Manager manager, Player player, Kobold kobold, Tower tower, LootTable lootTable, Dragon dragon)
+        static void Construct(LevelSystem levelSystem, Manager manager, Player player, Kobold kobold, Tower tower, LootTable lootTable, Dragon dragon)
         {
 
             int choice = 0;
@@ -120,7 +125,7 @@ namespace Test_Environment
                         //    asdf(manager);
                         //    break;
                         case 3:
-                            MainMenu(manager, player, kobold, tower, lootTable, dragon);
+                            MainMenu(levelSystem, manager, player, kobold, tower, lootTable, dragon);
                             break;
                         default:
                             Console.WriteLine("Invalid option. Try again.");
@@ -134,7 +139,7 @@ namespace Test_Environment
             } while (choice != 4 && manager.Turn <= 100);
         }
 
-        static void Tower(Player player, Test_Environment.Kobold kobold, Test_Environment.Tower tower, Manager manager, LootTable lootTable, Dragon dragon)
+        static void Tower(LevelSystem levelSystem, Player player, Test_Environment.Kobold kobold, Test_Environment.Tower tower, Manager manager, LootTable lootTable, Dragon dragon)
         {
 
             int choice = 0;
@@ -151,13 +156,13 @@ namespace Test_Environment
                     switch (choice)
                     {
                         case 1:
-                            Combat(player, kobold, tower, lootTable, manager, dragon);
+                            Combat(levelSystem, player, kobold, tower, lootTable, manager, dragon);
                             break;
                         case 2:
-                            CombatDragon(player, dragon, tower, lootTable, manager, kobold);
+                            CombatDragon(levelSystem, player, dragon, tower, lootTable, manager, kobold);
                             break;
                         case 3:
-                            MainMenu(manager, player, kobold, tower, lootTable, dragon);
+                            MainMenu(levelSystem, manager, player, kobold, tower, lootTable, dragon);
                             break;
                         default:
                             Console.WriteLine("Invalid option. Try again.");
@@ -215,18 +220,37 @@ namespace Test_Environment
             }
         }
 
-
         static void gatherWood(Manager manager)
         {
             manager.resource.wood += 1;
-            //Thread.Sleep(500);
+            Console.Write("-");
+            Thread.Sleep(100);
+            Console.Write("-");
+            Thread.Sleep(100);
+            Console.Write("-");
+            Thread.Sleep(100);
+            Console.Write("-");
+            Thread.Sleep(100);
+            Console.Write("-");
+            Thread.Sleep(100);
+            Console.Write("- \n");
             Console.WriteLine($"You have gathered 1 wood, you now have {manager.resource.wood} \n");
         }
 
         static void gatherStone(Manager manager)
         {
             manager.resource.stone += 1;
-            //Thread.Sleep(500);
+            Console.Write("-");
+            Thread.Sleep(100);
+            Console.Write("-");
+            Thread.Sleep(100);
+            Console.Write("-");
+            Thread.Sleep(100);
+            Console.Write("-");
+            Thread.Sleep(100);
+            Console.Write("-");
+            Thread.Sleep(100);
+            Console.Write("- \n");
             Console.WriteLine($"You have gathered 1 stone, you now have {manager.resource.stone} \n");
         }
 
@@ -245,7 +269,7 @@ namespace Test_Environment
             }
         }
 
-        static void Combat(Player player, Kobold kobold, Tower tower, LootTable lootTable, Manager manager, Dragon dragon)
+        static void Combat(LevelSystem levelSystem, Player player, Kobold kobold, Tower tower, LootTable lootTable, Manager manager, Dragon dragon)
         {
 
             int choice = 0;
@@ -269,6 +293,9 @@ namespace Test_Environment
                                 Console.WriteLine($"The kobold deals {kobold.Damage} to you, your health is now {player.Health} \n");
                                 if (kobold.Health == 0) 
                                 {
+                                    levelSystem.AddExperience(50);
+                                    levelSystem.PrintStatus();
+
                                     LootTable.InitializeLootTable();
                                     string loot = LootTable.GetRandomLoot();
                                     Console.WriteLine($"You loot {loot}");
@@ -290,7 +317,7 @@ namespace Test_Environment
                             Console.WriteLine("Invalid option. Try again.");
                             break;
                         case 3:
-                            MainMenu(manager, player, kobold, tower, lootTable, dragon);
+                            MainMenu(levelSystem, manager, player, kobold, tower, lootTable, dragon);
                             break;
 
                     }
@@ -298,9 +325,8 @@ namespace Test_Environment
             } while (choice != 3 && kobold.Health > 0 && choice != 3 && player.Health > 0);
         }
 
-        static void CombatDragon(Player player, Dragon dragon, Tower tower, LootTable lootTable, Manager manager, Kobold kobold)
+        static void CombatDragon(LevelSystem levelSystem, Player player, Dragon dragon, Tower tower, LootTable lootTable, Manager manager, Kobold kobold)
         {
-
             int choice = 0;
             do
             {
@@ -322,9 +348,14 @@ namespace Test_Environment
                                 Console.WriteLine($"The dragon deals {dragon.Damage} to you, your health is now {player.Health} \n");
                                 if (dragon.Health == 0 || dragon.Health < 0)
                                 {
+                                    levelSystem.AddExperience(150);
+                                    levelSystem.PrintStatus();
+
                                     LootTable.InitializeLootTable();
                                     string loot = LootTable.GetRandomLoot();
                                     Console.WriteLine($"You loot {loot}");
+
+                                   
                                 }
                                 break;
                             }
@@ -343,12 +374,21 @@ namespace Test_Environment
                             Console.WriteLine("Invalid option. Try again.");
                             break;
                         case 3:
-                            MainMenu(manager, player, kobold, tower, lootTable, dragon);
+                            MainMenu(levelSystem, manager, player, kobold, tower, lootTable, dragon);
                             break;
 
                     }
                 }
             } while (choice != 3 && dragon.Health > 0 && choice != 3 && player.Health > 0);
+        }
+
+        public void NewSkill(SkillSystem skillSystem, LevelSystem levelSystem)
+        {
+
+
+            SkillSystem.InitializeSkillSystem();
+            string skill = SkillSystem.GetSkillSystem();
+            Console.WriteLine($"Your new skill is {skill}");
         }
     }
 }
