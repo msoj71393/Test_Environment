@@ -354,8 +354,6 @@ namespace Test_Environment
                                     LootTable.InitializeLootTable();
                                     string loot = LootTable.GetRandomLoot();
                                     Console.WriteLine($"You loot {loot}");
-
-                                   
                                 }
                                 break;
                             }
@@ -382,13 +380,6 @@ namespace Test_Environment
             } while (choice != 3 && dragon.Health > 0 && choice != 3 && player.Health > 0);
         }
 
-        public void NewSkill(SkillSystem skillSystem, LevelSystem levelSystem)
-        {
-
-
-            SkillSystem.InitializeSkillSystem();
-            string skill = SkillSystem.GetSkillSystem();
-            Console.WriteLine($"Your new skill is {skill}");
-        }
+        
     }
 }
