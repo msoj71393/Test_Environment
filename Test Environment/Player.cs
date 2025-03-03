@@ -14,8 +14,6 @@ namespace Test_Environment
         public static void NewSkill(SkillSystem skillSystem, LevelSystem levelSystem)
         {
             SkillSystem.InitializeSkillSystem();
-            string skill = SkillSystem.GetSkillSystem("fire skill", "Fire Nova");
-            Console.WriteLine($"Your new skill is {skill}");
         }
     }
 
@@ -35,8 +33,23 @@ namespace Test_Environment
             while (experience >= experienceToNextLevel)
             {
                 LevelUp();
-                SkillSystem skillSystem = new SkillSystem();
-                Player.NewSkill(skillSystem, this);
+
+                if (level == 2)
+                {
+                    SkillSystem skillSystem = new SkillSystem();
+                    Player.NewSkill(skillSystem, this);
+
+                    string FireNova = SkillSystem.GetSkillSystem("fire skill", "Fire Nova");
+                    Console.WriteLine($"Your new skill is {FireNova}");
+                }
+                if (level == 3)
+                {
+                    SkillSystem skillSystem = new SkillSystem();
+                    Player.NewSkill(skillSystem, this);
+
+                    string Blizzard = SkillSystem.GetSkillSystem("cold skill", "Blizzard");
+                    Console.WriteLine($"Your new skill is {Blizzard}");
+                }
             }
         }
         public void LevelUp()
