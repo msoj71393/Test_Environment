@@ -13,10 +13,10 @@ namespace Test_Environment
 
         public static void InitializeLootTable()
         {
-            lootTable["Weapons"] = new List<string> { "Sword", "Axe", "Bow", "Dagger", "Spear" };
-            lootTable["Armor"] = new List<string> { "Helmet", "Chestplate", "Boots", "Gloves" };
-            lootTable["Potions"] = new List<string> { "Health Potion", "Mana Potion", "Stamina Potion" };
-            lootTable["Misc"] = new List<string> { "Gold", "Map", "Key" };
+            lootTable["a weapon"] = new List<string> { "Sword", "Axe", "Bow", "Dagger", "Spear" };
+            lootTable["armor piece"] = new List<string> { "Helmet", "Chestplate", "Boots", "Gloves" };
+            lootTable["a potion"] = new List<string> { "Health Potion", "Mana Potion", "Stamina Potion" };
+            lootTable["miscellaneous "] = new List<string> { "Gold", "Map", "Key" };
         }
 
         public static string GetRandomLoot()

@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using static Test_Environment.Program;
+using Test_Environment;
 
 namespace Test_Environment
 {
@@ -11,6 +12,8 @@ namespace Test_Environment
     {
         static void Main(string[] args)
         {
+            SkillSystem.InitializeSkillSystem();
+
             Manager manager = new Manager(0);
             Player player = new Player();
             Tower tower = new Tower();
@@ -18,9 +21,9 @@ namespace Test_Environment
             LootTable lootTable = new LootTable();
             Dragon dragon = new Dragon();
 
-            SkillSystem skillSystem = new SkillSystem();
-
             LevelSystem levelSystem = new LevelSystem();
+
+
 
             MainMenu(levelSystem, manager, player, kobold, tower, lootTable, dragon);
             Gather(levelSystem, manager, player, kobold, tower, lootTable, dragon);
@@ -271,6 +274,7 @@ namespace Test_Environment
 
         static void Combat(LevelSystem levelSystem, Player player, Kobold kobold, Tower tower, LootTable lootTable, Manager manager, Dragon dragon)
         {
+            kobold = new Kobold();
 
             int choice = 0;
             do
@@ -287,14 +291,13 @@ namespace Test_Environment
                         case 1:
                             if (player.Health > 0 && kobold.Health > 0)
                             {
-                                kobold.Health -= player.Damage;
-                                Console.WriteLine($"You deal {player.Damage} to the kobold, kobold's health is now {kobold.Health} ");
+                                kobold.Health -= player.CalculateTotalDamage();
+                                Console.WriteLine($"You deal {player.CalculateTotalDamage()} to the kobold, kobold's health is now {kobold.Health} ");
                                 player.Health -= kobold.Damage;
                                 Console.WriteLine($"The kobold deals {kobold.Damage} to you, your health is now {player.Health} \n");
                                 if (kobold.Health == 0) 
                                 {
-                                    levelSystem.AddExperience(50);
-                                    levelSystem.PrintStatus();
+                                    levelSystem.AddExperience(50, player);
 
                                     LootTable.InitializeLootTable();
                                     string loot = LootTable.GetRandomLoot();
@@ -327,6 +330,9 @@ namespace Test_Environment
 
         static void CombatDragon(LevelSystem levelSystem, Player player, Dragon dragon, Tower tower, LootTable lootTable, Manager manager, Kobold kobold)
         {
+            
+            dragon = new Dragon();
+            
             int choice = 0;
             do
             {
@@ -342,14 +348,14 @@ namespace Test_Environment
                         case 1:
                             if (player.Health > 0 && dragon.Health > 0)
                             {
-                                dragon.Health -= player.Damage;
-                                Console.WriteLine($"You deal {player.Damage} to the dragon, dragon's health is now {dragon.Health} ");
+                                int playerDamage = player.CalculateTotalDamage();
+                                dragon.Health -= player.CalculateTotalDamage();
+                                Console.WriteLine($"You deal {player.CalculateTotalDamage()} to the dragon, dragon's health is now {dragon.Health} ");
                                 player.Health -= dragon.Damage;
                                 Console.WriteLine($"The dragon deals {dragon.Damage} to you, your health is now {player.Health} \n");
                                 if (dragon.Health == 0 || dragon.Health < 0)
                                 {
-                                    levelSystem.AddExperience(150);
-                                    levelSystem.PrintStatus();
+                                    levelSystem.AddExperience(150, player);
 
                                     LootTable.InitializeLootTable();
                                     string loot = LootTable.GetRandomLoot();

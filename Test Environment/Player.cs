@@ -1,69 +1,115 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using Test_Environment;
 
-namespace Test_Environment
+namespace Test_Environment 
 {
-    class Player
+    public class Player
     {
-        public int Health = 100;
-        public int Damage = 7;
+    public int Health { get; set; } = 100;
+    public int BaseDamage { get; set; } = 7;
+    public List<Skill> Skills { get; set; } = new List<Skill>();
 
-        public static void NewSkill(SkillSystem skillSystem, LevelSystem levelSystem)
+    public int CalculateTotalDamage()
+    {
+        int totalDamage = BaseDamage;
+
+
+        foreach (var skill in Skills)
         {
-            SkillSystem.InitializeSkillSystem();
+            totalDamage += skill.DamageBoost;
+        }
+
+        return totalDamage;
+    }
+    }
+
+    public class Skill
+    {
+    public string Name { get; set; }
+    public string Type { get; set; }
+    public int DamageBoost { get; set; }
+
+    public Skill(string name, string type, int damageBoost)
+    {
+        Name = name;
+        Type = type;
+        DamageBoost = damageBoost;
+    }
+    }
+
+    public class SkillSystem
+    {
+    private static Dictionary<string, string> skillDictionary = new Dictionary<string, string>();
+
+    public static void InitializeSkillSystem()
+    {
+        skillDictionary.Clear();
+        skillDictionary.Add("fire skill", "Fire Nova");
+        skillDictionary.Add("cold skill", "Blizzard");
+    }
+
+    public static string GetSkillSystem(string skillType, string skillName)
+    {
+        if (skillDictionary.ContainsKey(skillType))
+        {
+            return skillDictionary[skillType];
+        }
+        return "Unknown Skill";
+    }
+    }
+
+    public class LevelSystem
+    {
+    public int experience = 0;
+    public int level = 1;
+    public int experienceToNextLevel;
+
+    public LevelSystem()
+    {
+        experienceToNextLevel = 100;
+    }
+
+    public void AddExperience(int amount, Player player)
+    {
+        experience += amount;
+        while (experience >= experienceToNextLevel)
+        {
+            LevelUp();
+
+            if (level == 2)
+            { 
+                player.Skills.Add(new Skill("Fire Nova", "Fire", 10));
+                DisplaySkills(player);
+                   
+            }
+            if (level == 3)
+            {
+                player.Skills.Add(new Skill("Blizzard", "Cold", 15));
+            }
         }
     }
 
-    class LevelSystem
+    public void LevelUp()
     {
-        public int experience = 0;
-        public int level = 1;
-        public int experienceToNextLevel;
-
-        public LevelSystem()
+        level++;
+        experience -= experienceToNextLevel;
+        experienceToNextLevel = (int)(experienceToNextLevel * 1.2);
+        Console.WriteLine($"Level Up! You are now level {level}.");
+    }
+        public void DisplaySkills(Player player)
         {
-            experienceToNextLevel = 100;
-        }
-        public void AddExperience(int amount)
-        {
-            experience += amount;
-            while (experience >= experienceToNextLevel)
+            Console.WriteLine("\nYour current skills are:");
+            foreach (var skill in player.Skills)
             {
-                LevelUp();
-
-                if (level == 2)
-                {
-                    SkillSystem skillSystem = new SkillSystem();
-                    Player.NewSkill(skillSystem, this);
-
-                    string FireNova = SkillSystem.GetSkillSystem("fire skill", "Fire Nova");
-                    Console.WriteLine($"Your new skill is {FireNova}");
-                }
-                if (level == 3)
-                {
-                    SkillSystem skillSystem = new SkillSystem();
-                    Player.NewSkill(skillSystem, this);
-
-                    string Blizzard = SkillSystem.GetSkillSystem("cold skill", "Blizzard");
-                    Console.WriteLine($"Your new skill is {Blizzard}");
-                }
+                Console.WriteLine($"Skill: {skill.Name} | Type: {skill.Type} | Damage Boost: {skill.DamageBoost}");
             }
+            Console.WriteLine();
         }
-        public void LevelUp()
-        {
-            level++;
-            experience -= experienceToNextLevel;
-
-            experienceToNextLevel = (int)(experienceToNextLevel * 1.2);
-            Console.WriteLine($"Level Up! You are now level {level}.");
-        }
-        public void PrintStatus()
-        {
-            Console.WriteLine($"Level: {level}, Experience: {experience}/{experienceToNextLevel}");
-        }
-
     }
 }
