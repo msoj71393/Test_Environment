@@ -20,16 +20,13 @@ namespace Test_Environment
             Kobold kobold = new Kobold();
             LootTable lootTable = new LootTable();
             Dragon dragon = new Dragon();
+            Inventory inventory = new Inventory();
 
             LevelSystem levelSystem = new LevelSystem();
-
-
 
             MainMenu(levelSystem, manager, player, kobold, tower, lootTable, dragon);
             Gather(levelSystem, manager, player, kobold, tower, lootTable, dragon);
             Construct(levelSystem, manager, player, kobold, tower, lootTable, dragon);
-
-            
         }
 
         static void MainMenu(LevelSystem levelSystem, Manager manager, Player player, Kobold kobold, Tower tower, LootTable lootTable, Dragon dragon)
@@ -299,9 +296,17 @@ namespace Test_Environment
                                 {
                                     levelSystem.AddExperience(50, player);
 
-                                    LootTable.InitializeLootTable();
-                                    string loot = LootTable.GetRandomLoot();
-                                    Console.WriteLine($"You loot {loot}");
+                                    //LootTable.InitializeLootTable();
+                                    //string loot = LootTable.GetRandomLoot();
+                                    //Console.WriteLine($"You loot {loot}");
+
+                                    Console.WriteLine($"You loot");
+                                    Item damageElixir = new Item("Damage Elixir", "DamageBoost", 5);
+                                    Item healthPotion = new Item("Health Potion", "HealthPotion", 50);
+                                    
+                                    player.PlayerInventory.AddItem(healthPotion);
+                                    player.PlayerInventory.AddItem(damageElixir);
+                                    
                                 }
                                 break;
                             }
@@ -357,9 +362,13 @@ namespace Test_Environment
                                 {
                                     levelSystem.AddExperience(150, player);
 
-                                    LootTable.InitializeLootTable();
-                                    string loot = LootTable.GetRandomLoot();
-                                    Console.WriteLine($"You loot {loot}");
+                                    //LootTable.InitializeLootTable();
+                                    //string loot = LootTable.GetRandomLoot();
+                                    //Console.WriteLine($"You loot {loot}");
+
+                                    Console.WriteLine($"You loot");
+                                    Item scrollMagicMissile = new Item("Scroll of Magic Missile", "DamageBoost", 7);
+                                    player.PlayerInventory.AddItem(scrollMagicMissile);
                                 }
                                 break;
                             }
